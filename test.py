@@ -11,9 +11,8 @@ class Gui(customtkinter.CTk):
         self.labels()
         self.check_ffmpeg()
         self.file_path = None 
-        self.save_path = None 
+        self.save_path = None
         self.segmented_button_creation()
-        
         
     
     def buttons(self): # Przyciski
@@ -25,12 +24,13 @@ class Gui(customtkinter.CTk):
         self.button2.place(x=60, y=350)
         
     
+    
     def labels(self): # Etykiety
         self.label= customtkinter.CTkLabel(self, width=400)
-        self.label.place(x=210, y=75)
+        self.label.place(x=210, y=50)
         self.label.configure(text="Nie wybrano pliku")
         self.label1= customtkinter.CTkLabel(self, width=400)
-        self.label1.place(x=210, y=175)
+        self.label1.place(x=210, y=150)
         self.label1.configure(text="Nie wybrano miejsca zapisu")
         self.label2=customtkinter.CTkLabel(self, width=400)
         self.label2.place(x=210, y=350)
@@ -55,9 +55,7 @@ class Gui(customtkinter.CTk):
             self.label2.configure(text="")
         
       
-    def segmented_button_callback(self, value): #Przypisanie komendy po wybrananiu opcji
-    
-        
+    def segmented_button_callback(self, value): # Przypisanie komendy po wybrananiu opcji
         if value == "Konwersja szybka":
             self.cnv = ['powershell.exe', "ffmpeg","-fflags","+igndts", "-i", self.file_path,"-map 0:0?","-map 0:1?","-map 0:2?", "-c:v", "copy", "-c:a", "copy","-vsync passthrough", self.save_path]
         elif value == "Konwersja wolna":
