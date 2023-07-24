@@ -1,5 +1,6 @@
 import customtkinter, subprocess, re
 from CTkMessagebox import CTkMessagebox
+import ctypes
 class Gui(customtkinter.CTk):  
     def __init__(self): 
         super().__init__()  # Stworzenie głównego okienka
@@ -14,7 +15,12 @@ class Gui(customtkinter.CTk):
         self.save_path = None
         self.segmented_button_creation()
         
-    
+    def ok(self):
+        self.result = self.ok
+        ctypes.windll.user32.MessageBoxW(0, "Konwersja szybka - Błyskawicznie konwertuje nagranie, możliwa utrata danych w trakcie.\nKonwersja wolna - Powolna, ale dokładna konwersja filmiku.", "Typy konwersji")
+        self.destroy
+        
+        
     def buttons(self): # Przyciski
         self.button = customtkinter.CTkButton(self, text="Wybierz plik", command=self.file_open)
         self.button.place(x=60, y=50)
@@ -22,6 +28,8 @@ class Gui(customtkinter.CTk):
         self.button3.place(x=60, y=150)
         self.button2 = customtkinter.CTkButton(self, text="Konwertuj do MP4", command= self.convert_command) 
         self.button2.place(x=60, y=350)
+        self.button4 = customtkinter.CTkButton(self,text="Info", width=30,command=self.ok)
+        self.button4.place(x=300, y=253)
         
     
     
