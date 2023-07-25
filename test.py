@@ -16,8 +16,7 @@ class Gui(customtkinter.CTk):
         self.segmented_button_creation()
         
     def ok(self):
-        self.result = self.ok
-        ctypes.windll.user32.MessageBoxW(0, "Konwersja szybka - Błyskawicznie konwertuje nagranie, możliwa utrata danych w trakcie.\nKonwersja wolna - Powolna, ale dokładna konwersja filmiku.", "Typy konwersji")
+        
         self.destroy
         
         
