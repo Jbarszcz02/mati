@@ -22,11 +22,12 @@ class Gui(customtkinter.CTk):
         self.button.place(x=60, y=50)
         self.button3 = customtkinter.CTkButton(self, text="Zapisz plik", command=self.file_save)
         self.button3.place(x=60, y=150)
-        self.button2 = customtkinter.CTkButton(self, text="Konwertuj do MP4", command= self.convert_command) 
+        self.button2 = customtkinter.CTkButton(self, text="Konwertuj do MP4",width=30 ,command= self.convert_command) 
         self.button2.place(x=60, y=350)
         self.button4 = customtkinter.CTkButton(self,text="Info", width=30,command= lambda: CTkMessagebox(title="Typy konwersji", width=520, message="Konwersja szybka - Błyskawiczna konwersja nagrania, możliwa utrata danych w trakcie.\n\nKonwersja wolna - Powolna, ale dokładna konwersja nagrania."))
         self.button4.place(x=300, y=253)
-        
+        self.button5 = customtkinter.CTkButton(self,text="Anuluj", width=30,command=self.anuluj)     
+         
     
         
     def labels(self): # Etykiety
@@ -36,13 +37,18 @@ class Gui(customtkinter.CTk):
         self.label1= customtkinter.CTkLabel(self, width=400)
         self.label1.place(x=210, y=150)
         self.label1.configure(text="Nie wybrano miejsca zapisu")
-        self.label2=customtkinter.CTkLabel(self, width=400)
-        self.label2.place(x=210, y=350)
+        self.label2=customtkinter.CTkLabel(self, width=40)
+        self.label2.place(x=400, y=350)
         self.label2.configure(text="")
         self.label3 =customtkinter.CTkLabel(self, width=740, height=40)
         self.label3.place(x=0, y=0)
         self.label3.configure(text="")
         
+    def anuluj(self):
+        subprocess.terminate()
+        self.button2.configure(state="enabled")
+        
+    
     
     def file_open(self): # Okienko wyboru plików .DAV
         file = customtkinter.filedialog.askopenfile(defaultextension=".dav", filetypes=[("dav", ".dav")])
@@ -75,6 +81,9 @@ class Gui(customtkinter.CTk):
     def convert_command(self): #Konwertowanie - komendy + komunikaty
 
         self.label2.configure(text="Konwersja w trakcie")
+        self.button5.place(x=200, y=350)
+        self.button2.configure(state="disabled")
+        
         
 
         def run_conversion():
