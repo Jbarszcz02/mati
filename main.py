@@ -26,7 +26,7 @@ class Gui(customtkinter.CTk):
         self.button2.place(x=60, y=350)
         self.button4 = customtkinter.CTkButton(self,text="Info", width=30,command= lambda: CTkMessagebox(title="Typy konwersji", width=520, message="Konwersja szybka - Błyskawiczna konwersja nagrania, możliwa utrata danych w trakcie.\n\nKonwersja wolna - Powolna, ale dokładna konwersja nagrania."))
         self.button4.place(x=300, y=253)
-        self.button5 = customtkinter.CTkButton(self,text="Anuluj", width=30,command=self.anuluj)     
+        self.button5 = customtkinter.CTkButton(self,text="Anuluj", width=30,command=self.cancel)     
          
     
         
@@ -44,12 +44,6 @@ class Gui(customtkinter.CTk):
         self.label3.place(x=0, y=0)
         self.label3.configure(text="")
         
-    def anuluj(self):
-        subprocess.terminate()
-        self.button2.configure(state="enabled")
-        
-    
-    
     def file_open(self): # Okienko wyboru plików .DAV
         file = customtkinter.filedialog.askopenfile(defaultextension=".dav", filetypes=[("dav", ".dav")])
         if file:
@@ -83,19 +77,51 @@ class Gui(customtkinter.CTk):
         self.label2.configure(text="Konwersja w trakcie")
         self.button5.place(x=200, y=350)
         self.button2.configure(state="disabled")
+        self.seg_but.configure(state="disabled")
+        self.button.configure(state="disabled")
+        self.button3.configure(state="disabled")
+        self.button4.configure(state="disabled")
+        
+        
+        
+        
         
         
 
         def run_conversion():
-            subprocess.run(self.cnv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True,
+            k=subprocess.run(self.cnv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True,
                            creationflags=subprocess.CREATE_NO_WINDOW)
-            self.label2.configure(text="Konwersja zakończona")
-            CTkMessagebox(title=".DAV to .MP4", message="Konwersja przebiegła pomyślnie", icon="check")
+            if k.returncode == 0:
+                u = subprocess.run(['powershell','echo', 'Done!'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True,
+                           creationflags=subprocess.CREATE_NO_WINDOW)
+                if "Done!" in u.stdout:
+                    self.label2.configure(text="Konwersja zakończona")
+                    CTkMessagebox(title=".DAV to .MP4", message="Konwersja przebiegła pomyślnie", icon="check")
+                    
 
+            
+            
+                
+    
         thread = threading.Thread(target=run_conversion)
         thread.start()
 
-             
+    def cancel(self):
+        
+        subprocess.run(['powershell.exe', "TaskKill", "/im", "ffmpeg.exe", "/F"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True,
+                           creationflags=subprocess.CREATE_NO_WINDOW)
+        self.output= subprocess.run(['powershell.exe', 'echo', 'canceled'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True,
+                           creationflags=subprocess.CREATE_NO_WINDOW)
+        self.button5.place_forget()
+        self.button2.configure(state="normal")
+        self.seg_but.configure(state="normal")
+        self.button.configure(state="normal")
+        self.button3.configure(state="normal")
+        self.button4.configure(state="normal")
+        self.label2.configure(text="Konwersja przerwana")
+        CTkMessagebox(title=".DAV to .MP4", message="Konwersja została przerwana", icon="cancel")
+        
+              
     
     def check_ffmpeg(self): # Sprawdzanie obecności ffmpeg z komunikatem
          self.chk1=subprocess.run(['powershell.exe', "ffmpeg", "-version"], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NO_WINDOW)
